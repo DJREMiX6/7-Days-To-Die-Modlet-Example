@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <!-- This tag navigates through the recipes.xml file, inside the recipes XML tag and append the content at the bottom -->
+    <append xpath="/recipes">
+        <!-- This tag describes a new recipe to craft 3 bottles of acid -->
+        <!-- "resourceAcid" is the name of the ingame not localized object -->
+        <!-- "count" is the amount of "resourceAcid" crafted -->
+        <recipe name="resourceAcid" count="3">
+            <!-- This tag describes one required ingredient to craft the 3 bottles of acid -->
+            <!-- "carBattery" is the name of the ingame non localized object -->
+            <!-- "count" is the amount of "carBattery" needed to craft the "resourceAcid" -->
+            <ingredient name="carBattery" count="1" />
+        </recipe>
+
+        <!-- Add a solar bank crafting recipe to the forge -->
+        <!-- material_based="true" tells the game to pull the ingredients from the forge and not from the backpack -->
+        <!-- craft_tool="toolForgeCrucible" tells the game that to be able to craft the solar bank, you need the crucible in the forge -->
+        <!-- craft_time attribute specifies the time in seconds that the item requires to be crafted -->
+        <recipe name="solarbank" count="1" craft_area="forge" material_based="true" craft_tool="toolForgeCrucible" craft_time="120">
+            <!-- "unit_iron" is the forge equivalent of the "resourceScrapIron" -->
+            <ingredient name="unit_iron" count="100" />
+            <!-- "unit_glass" is the forge equivalent of the "resourceCrushedSand" -->
+            <ingredient name="unit_glass" count="50" />
+        </recipe>
+    </append>
+
+    <!-- This tag navigates through the recipes.xml file, 
+        inside the recipes tag, 
+        looks for a recipe tag with the attribute "name" equal to "couchSofa01" and/or "leatherCouchSofa2"
+        and append content at the bottom-->
+    <append xpath="/recipes/recipe[
+    @name='couchSofa01' 
+    or @name='leatherCouchSofa2']">
+        <!-- This tag adds an ingredient for the "couchSofa01" and/or "leatherCouchSofa2" to be crafted -->
+        <!-- The ingredient is cotton ("resourceCropCottonPlant" is the ingame non localized object's name) -->
+        <!-- "count" is the amount of cotton needed to craft the "couchSofa01" -->
+        <ingredient name="resourceCropCottonPlant" count="10" />
+    </append>
+
+    <!-- This tag removes an element from the vanilla file -->
+    <!-- The element to remove is specified via xpath attribute -->
+    <!-- In this case, the remove tag navigates through the recipes.xml file,
+    looks inside the recipes tag, 
+    looks for a recipe tag with the attribute name equal to "resourceConcreteMix",
+    inside it looks for an ingredient tag with the attribute name equal to "resourceCrushedSand"
+    and removes it -->
+    <remove xpath="recipes/recipe[@name='resourceConcreteMix']/ingredient[@name='resourceCrushedSand']" />
+    
+    <!-- This tag removes an element from the vanilla file -->
+    <!-- The element to remove is specified via xpath attribute -->
+    <!-- In this case, the remove tag navigates through the recipes.xml file,
+    looks inside the recipes tag, 
+    looks fot a recipe tag with the attribute name equal to "ammo9mmBulletBall",
+    inside it looks for ingredient tags with the attribute name equal to "resourceBulletTip" 
+    and/or "resourceBulletCasing" and removes it -->
+    <remove xpath="recipes/recipe[@name='ammo9mmBulletBall']/ingredient[
+    @name='resourceBulletTip' 
+    or @name='resourceBulletCasing']" />
+
+    <!-- This tag removes an element's attribute from the vanilla file -->
+    <!-- In this case, the removeattribute tag navigates through the recipes.xml file,
+    looks inside the recipes tag,
+    looks for a recipe tag with the attribute name equal to "resourceGlue" and the attribute craft_area equal to "campfire"
+    and deletes the attribute craft_area to make the "resourceGlue" craftable in the backpack -->
+    <!-- 
+        Example: <removeattribute xpath="/recipes/recipe[@attribute='value' and @other_attribute='otherValue']/@attribute_to_remove" /> 
+        This will remove the attribute "attribute_to_remove" from the tag.
+
+        Before:
+        <recipes>
+            <recipe attribute="value" other_attribute="otherValue" attribute_to_remove="anotherValueToo" />
+        </recipes>
+
+        After:
+        <recipes>
+            <recipe attribute="value" other_attribute="otherValue" />
+        </recipes>
+        -->
+    <removeattribute xpath="/recipes/recipe[@name='resourceGlue' and @craft_area='campfire']/@craft_area" />
+
+    <!-- This tag sets an attribute value to an XML element event if the attribute does not exists in the vanilla file -->
+    <!-- In this case, the setattribute tag navigate through the recipes.xml file,
+    lokks inside the recipes tag,
+    looks for a recipe tag withe the attribute name equal to "resourceGunPowder"
+    but only a tag that does not have the craft_area attribute,
+    adds the attribute craft_area with the value "campfire" 
+    and now the "resourceGunPowder" can be crafted inside the campfire -->
+    <setattribute xpath="/recipes/recipe[@name='resourceGunPowder' and not(@craft_area)]" name="craft_area">campfire</setattribute>
+
+    <!-- This tag sets an attribute value to an XML element event if the attribute does not exists in the vanilla file -->
+    <!-- In this case, the setattribute tag navigate through the recipes.xml file,
+    lokks inside the recipes tag,
+    looks for a recipe tag withe the attribute name equal to "resourceGunPowder"
+    and the attribute craft_area equal to "campfire",
+    adds the attribute craft_tool with the value "toolBeaker" 
+    and now the "resourceGunPowder" needs a beaker as campfire's tool to be crafted -->
+    <setattribute xpath="/recipes/recipe[@name='resourceGunPowder' and @craft_area='campfire']" name="craft_tool">toolBeaker</setattribute>
+
+    <!-- [START] Modifies the recipe of "ammoCrossbowBoltIron" to be craftable in the forge instead than the backpack -->
+    <remove xpath="/recipes/recipe[@name='ammoCrossbowBoltIron']/ingredient" />
+    <setattribute xpath="/recipes/recipe[@name='ammoCrossbowBoltIron']" name="craft_area">forge</setattribute>
+    <setattribute xpath="/recipes/recipe[@name='ammoCrossbowBoltIron']" name="material_based">true</setattribute>
+    <append xpath="/recipes/recipe[@name='ammoCrossbowBoltIron']">
+        <ingredient name="unit_iron" count="2" />
+        <ingredient name="unit_clay" count="1" />
+    </append>
+    <!-- [END] Modifies the recipe of "ammoCrossbowBoltIron" to be craftable in the forge instead than the backpack -->
+</config>
